@@ -29,7 +29,16 @@ router.get("/:id", async (req, res) => {
 
 // Add new product (Admin only)
 router.post("/", authMiddleware, isAdmin, async (req, res) => {
-  const { title, description, price, category, images } = req.body;
+  const {
+    title,
+    description,
+    price,
+    category,
+    images,
+    countInStock,
+    isFeatured,
+  } = req.body;
+
   try {
     const newProduct = new Product({
       title,
@@ -37,7 +46,11 @@ router.post("/", authMiddleware, isAdmin, async (req, res) => {
       price,
       category,
       images,
+      countInStock,
+      isFeatured,
+      createdBy: req.user._id, // from authMiddleware
     });
+
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (err) {
@@ -48,15 +61,26 @@ router.post("/", authMiddleware, isAdmin, async (req, res) => {
 
 // Update product (Admin only)
 router.put("/:id", authMiddleware, isAdmin, async (req, res) => {
-  const { title, description, price, category, images } = req.body;
+  const {
+    title,
+    description,
+    price,
+    category,
+    images,
+    countInStock,
+    isFeatured,
+  } = req.body;
+
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      { title, description, price, category, images },
+      { title, description, price, category, images, countInStock, isFeatured },
       { new: true }
     );
+
     if (!updatedProduct)
       return res.status(404).json({ message: "Product not found" });
+
     res.json(updatedProduct);
   } catch (err) {
     console.error(err);
