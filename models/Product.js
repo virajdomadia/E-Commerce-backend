@@ -19,12 +19,16 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "Product category is required"],
     },
-    images: [
-      {
-        type: String, // URL of the image
-        required: true,
+    images: {
+      type: [String],
+      set: (urls) => urls.map((url) => url.trim()),
+      validate: {
+        validator: function (arr) {
+          return arr.length > 0 && arr[0] !== "";
+        },
+        message: "At least one image URL is required",
       },
-    ],
+    },
     countInStock: {
       type: Number,
       required: true,
