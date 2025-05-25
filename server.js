@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 
 const auth = require("./routes/authRoute");
 const product = require("./routes/productRoute");
+const cart = require("./routes/cartRoute");
 
 const app = express();
 dotenv.config();
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/auth", auth);
 app.use("/api/products", product);
+app.use("/api/cart", cart);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
